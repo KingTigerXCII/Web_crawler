@@ -18,25 +18,29 @@ def get_next_url(page):
 
         return url, end_url
 
-    except:
-        print ("Function get_next_url raises an error.")
+    except Exception as e:
+        print ( "Error in get_next_url: %s" % str(e) )
 
 
 def get_all_urls(page):
     """This function returns all urls of the website"""
 
     try:
+        
+        url_list = []
+            
         while True:       
             url, end_url = get_next_url(page)
             
             if url:
-                print ("url: ", url) 
+                url_list.append(url)
                 page = page[end_url:]
-            
+                
             else:
-                break
-    except:
-        print ("Function get_all_urls raises an error.")
+                return url_list
+            
+    except Exception as e:
+        print ( "Error in get_all_urls: %s" % str(e) )
 
 # Select a url for a website
 # Request
@@ -44,7 +48,9 @@ def get_all_urls(page):
 
 page = ('<div id="top_bin"> <div id="top_content" class="width960"> <div class="udacity float-left"> <a href="http://udacity.com">Hello world</a><div id="top_bin"> <div id="top_content" class="width960"> <div class="udacity float-left"> <a href="http://udacity.com">Hello world</a><div id="top_bin"> <div id="top_content" class="width960"> <div class="udacity float-left"> <a href="http://udacity.com">Hello world</a><div id="top_bin"> <div id="top_content" class="width960"> <div class="udacity float-left"> <a href="http://udacity.com">Hello world</a><div id="top_bin"> <div id="top_content" class="width960"> <div class="udacity float-left"> <a href="http://udacity.com">Hello world</a>')
 
-get_all_urls(page)
+url_list = get_all_urls(page)
+
+print (url_list)
 
 
 
