@@ -25,6 +25,32 @@ def get_page(url):
         elif url == "http://www.udacity.com/cs101x/flying.html":
             return ('<html> <body> The magic words are Squeamish Ossifrage! '
             '</body> </html>')
+        elif url == "http://top.contributors/velak.html":
+            return ('<a href="http://top.contributors/jesyspa.html">'
+        '<a href="http://top.contributors/forbiddenvoid.html">')
+        elif url == "http://top.contributors/jesyspa.html":
+            return  ('<a href="http://top.contributors/elssar.html">'
+        '<a href="http://top.contributors/kilaws.html">')
+        elif url == "http://top.contributors/forbiddenvoid.html":
+            return ('<a href="http://top.contributors/charlzz.html">'
+        '<a href="http://top.contributors/johang.html">'
+        '<a href="http://top.contributors/graemeblake.html">')
+        elif url == "http://top.contributors/kilaws.html":
+            return ('<a href="http://top.contributors/tomvandenbosch.html">'
+        '<a href="http://top.contributors/mathprof.html">')
+        elif url == "http://top.contributors/graemeblake.html":
+            return ('<a href="http://top.contributors/dreyescat.html">'
+        '<a href="http://top.contributors/angel.html">')
+        elif url == "A1":
+            return  '<a href="B1"> <a href="C1">  '
+        elif url == "B1":
+            return  '<a href="E1">'
+        elif url == "C1":
+            return '<a href="D1">'
+        elif url == "D1":
+            return '<a href="E1"> '
+        elif url == "E1":
+            return '<a href="F1"> '
     except:
         return ""
     return ""
@@ -81,19 +107,26 @@ def get_all_urls(page):
     except Exception as e:
         print ( "Error in get_all_urls: %s" % str(e) )
 
-def crawl_web(start_url, max_crawl_pages):
+def crawl_web(start_url, max_crawl_depth):
     """This function get all links within a website and crawl each of them"""
 
     try:
         urls_to_crawl = [start_url]
         urls_crawled = []
+        urls_next_depth = []
+        depth = 0
 
-        while urls_to_crawl and len(urls_crawled) < max_crawl_pages:
+        while urls_to_crawl and depth <= max_crawl_depth:
             page_to_crawl = urls_to_crawl.pop()
             
             if (page_to_crawl not in urls_crawled):
-                union_lists(urls_to_crawl, get_all_urls(get_page(page_to_crawl)))
+                union_lists(urls_next_depth, get_all_urls(get_page(page_to_crawl)))
                 urls_crawled.append(page_to_crawl)
+
+            if not urls_to_crawl:
+                urls_to_crawl = urls_next_depth
+                urls_next_depth = []
+                depth = depth + 1
 
         return urls_crawled
                 
@@ -105,9 +138,10 @@ def crawl_web(start_url, max_crawl_pages):
 # Request
 # Handle the response --> result page
 
+print (crawl_web("http://www.udacity.com/cs101x/index.html",0))
 print (crawl_web("http://www.udacity.com/cs101x/index.html",1))
-print (crawl_web("http://www.udacity.com/cs101x/index.html",3))
-print (crawl_web("http://www.udacity.com/cs101x/index.html",500))
+print (crawl_web("http://www.udacity.com/cs101x/index.html",50))
+print (crawl_web("http://www.udacity.com/cs101x/index.html",2))
 
 
 
