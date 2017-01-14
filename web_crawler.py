@@ -134,9 +134,27 @@ def crawl_web(start_url, max_crawl_depth):
     except Exception as e:
         print ( "Error in crawl_web: %s" % str(e) )
 
+def add_to_index(index, keyword, url):
+    """This function build the index of the searchengine"""
+
+    try:
+    
+        for element in index:
+            if(keyword == element[0]):
+                if url not in element[1]:
+                    element[1].append(url)
+                    return
+                
+        index.append([keyword,[url]])
+
+    except Exception as e:
+        print ( "Error in add_to_index: %s" % str(e) )
+
 # Select a url for a website
 # Request
 # Handle the response --> result page
+
+index[]
 
 print (crawl_web("http://www.udacity.com/cs101x/index.html",0))
 print (crawl_web("http://www.udacity.com/cs101x/index.html",1))
