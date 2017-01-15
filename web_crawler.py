@@ -79,7 +79,7 @@ def union_lists(list1, list2):
     try:
         
         for element in list2:
-            if element not in list1:
+            if (element not in list1):
                 list1.append(element)
 
     except Exception as e:
@@ -115,12 +115,15 @@ def crawl_web(start_url, max_crawl_depth):
         urls_crawled = []
         urls_next_depth = []
         depth = 0
+        index = []
 
         while urls_to_crawl and depth <= max_crawl_depth:
             page_to_crawl = urls_to_crawl.pop()
             
             if (page_to_crawl not in urls_crawled):
-                union_lists(urls_next_depth, get_all_urls(get_page(page_to_crawl)))
+                content_page = get_page(page_to_crawl)
+                add_page_to_index(index, page_to_crawl, content_page)
+                union_lists(urls_next_depth, get_all_urls(content))
                 urls_crawled.append(page_to_crawl)
 
             if not urls_to_crawl:
@@ -128,7 +131,7 @@ def crawl_web(start_url, max_crawl_depth):
                 urls_next_depth = []
                 depth = depth + 1
 
-        return urls_crawled
+        return index
                 
 
     except Exception as e:
@@ -139,10 +142,10 @@ def add_to_index(index, keyword, url):
 
     try:
     
-        for element in index:
-            if(keyword == element[0]):
-                if url not in element[1]:
-                    element[1].append(url)
+        for entry in index:
+            if (keyword == entry[0]):
+                if (url not in entry[1]):
+                    entry[1].append(url)
                     return
                 
         index.append([keyword,[url]])
@@ -150,18 +153,44 @@ def add_to_index(index, keyword, url):
     except Exception as e:
         print ( "Error in add_to_index: %s" % str(e) )
 
+def index_lookup(index, keyword):
+    """This function looks for the keyword in the index and return the entry or a empty list"""
+
+    try:
+
+        for entry in index:
+            if (keyword == entry[0]):
+                return entry[1]
+        return []
+
+    except Exception as e:
+        print ( "Error in lookup: %s" % str(e) )
+
+def add_page_to_index(index, url, content):
+
+    try:
+
+        keywords = content.split()
+        for keyword in keywords:
+            add_to_index(index, keyword, url)
+
+    except Exception as e:
+        print ( "Error in add_page_to_index: %s" % str(e) )
+
 # Select a url for a website
 # Request
 # Handle the response --> result page
 
-index[]
+index = []
 
-print (crawl_web("http://www.udacity.com/cs101x/index.html",0))
-print (crawl_web("http://www.udacity.com/cs101x/index.html",1))
-print (crawl_web("http://www.udacity.com/cs101x/index.html",50))
-print (crawl_web("http://www.udacity.com/cs101x/index.html",2))
-
-
+#print (crawl_web("http://www.udacity.com/cs101x/index.html",0))
+#print (crawl_web("http://www.udacity.com/cs101x/index.html",1))
+#print (crawl_web("http://www.udacity.com/cs101x/index.html",50))
+#print (crawl_web("http://www.udacity.com/cs101x/index.html",2))
+#add_page_to_index(index, 'fake.test', "This is a test")
+#print (index)
+#add_page_to_index(index, 'not.test', "This is not a test")
+#print (index)
 
 
 
