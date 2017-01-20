@@ -7,17 +7,15 @@ def get_page(url):
     """This function return the html code of a website"""
     
     try:
-
         return urllib.request.urlopen(url).read().decode('utf-8')
 
     except:
         return ""
 
 def get_next_url(page):
-    """This function returns a url and the end point of the url"""
+    """This function returns a url and the end point of the url in the html structure"""
 
     try:
-
         start_html_tag = page.find(HTML_TAG_URL)
         # Link in the website not found
         if start_html_tag == -1:
@@ -33,8 +31,9 @@ def get_next_url(page):
         print ( "Error in get_next_url: %s" % str(e) )
 
 def union_lists(list1, list2):
-    try:
-        
+    """This function unions two lists"""
+    
+    try:       
         for element in list2:
             if element not in list1:
                 list1.append(element)
@@ -45,8 +44,7 @@ def union_lists(list1, list2):
 def get_all_urls(page):
     """This function returns all urls of the website"""
 
-    try:
-        
+    try:        
         url_list = []
             
         while True:
@@ -65,7 +63,7 @@ def get_all_urls(page):
         print ( "Error in get_all_urls: %s" % str(e) )
 
 def crawl_web(start_url, max_crawl_depth):
-    """This function get all links within a website and crawl each of them"""
+    """This function gets a url as parameter and searches for urls in a given depth"""
 
     try:
         urls_to_crawl = [start_url]
@@ -97,8 +95,7 @@ def crawl_web(start_url, max_crawl_depth):
 def add_to_index(index, keyword, url):
     """This function build the index of the searchengine"""
 
-    try:
-    
+    try: 
         for entry in index:
             if entry[0] == keyword:
                 for urls in entry[1]:
@@ -116,7 +113,6 @@ def index_lookup(index, keyword):
     """This function looks for the keyword in the index and return the entry or a empty list"""
 
     try:
-
         for entry in index:
             if keyword == entry[0]:
                 return entry[1]
@@ -128,7 +124,6 @@ def index_lookup(index, keyword):
 def add_page_to_index(index, url, content):
 
     try:
-
         keywords = content.split()
         for keyword in keywords:
             add_to_index(index, keyword, url)
@@ -139,8 +134,7 @@ def add_page_to_index(index, url, content):
 def record_user_click(index, keyword, url):
     """This function increases the count of website clicks for a specific keyword"""
 
-    try:
-        
+    try:       
         result_of_urls = index_lookup(index, keyword)
         if result_of_urls:
             for entry in result_of_urls:
