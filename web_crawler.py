@@ -70,7 +70,7 @@ def crawl_web(start_url, max_crawl_depth):
         urls_crawled = []
         urls_next_depth = []
         depth = 0
-        index = []
+        index = {}
 
         while urls_to_crawl and depth <= max_crawl_depth:
             page_to_crawl = urls_to_crawl.pop()
@@ -95,16 +95,11 @@ def crawl_web(start_url, max_crawl_depth):
 def add_to_index(index, keyword, url):
     """This function build the index of the searchengine"""
 
-    try: 
-        for entry in index:
-            if entry[0] == keyword:
-                for urls in entry[1]:
-                    if urls[0] == url:
-                        return
-                entry[1].append([url, 0])
-                return
-                
-        index.append([keyword,[[url, 0]]])
+    try:
+        if keyword in index:
+            index[keyword].append(url)
+        else:
+            index[keyword] = [url]
 
     except Exception as e:
         print ( "Error in add_to_index: %s" % str(e) )
@@ -113,10 +108,10 @@ def index_lookup(index, keyword):
     """This function looks for the keyword in the index and return the entry or a empty list"""
 
     try:
-        for entry in index:
-            if keyword == entry[0]:
-                return entry[1]
-        return []
+        if keyword in index:
+            return index[keyword]
+        else:
+            return None
 
     except Exception as e:
         print ( "Error in lookup: %s" % str(e) )
@@ -131,18 +126,18 @@ def add_page_to_index(index, url, content):
     except Exception as e:
         print ( "Error in add_page_to_index: %s" % str(e) )
 
-def record_user_click(index, keyword, url):
-    """This function increases the count of website clicks for a specific keyword"""
-
-    try:       
-        result_of_urls = index_lookup(index, keyword)
-        if result_of_urls:
-            for entry in result_of_urls:
-                if entry[0] == url:
-                    entry[1] = entry[1]+1
-                        
-    except Exception as e:
-        print ( "Error in record_user_click: %s" % str(e) )
+#def record_user_click(index, keyword, url):
+#    """This function increases the count of website clicks for a specific keyword"""
+#
+#    try:       
+#        result_of_urls = index_lookup(index, keyword)
+#        if result_of_urls:
+#            for entry in result_of_urls:
+#                if entry[0] == url:
+#                    entry[1] = entry[1]+1
+#                        
+#    except Exception as e:
+#        print ( "Error in record_user_click: %s" % str(e) )
 
 # Select a url for a website
 # Request
