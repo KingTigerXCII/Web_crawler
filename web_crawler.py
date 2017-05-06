@@ -71,6 +71,7 @@ def crawl_web(start_url, max_crawl_depth):
         urls_next_depth = []
         depth = 0
         index = {}
+        graph = {}
 
         while urls_to_crawl and depth <= max_crawl_depth:
             page_to_crawl = urls_to_crawl.pop()
@@ -78,7 +79,9 @@ def crawl_web(start_url, max_crawl_depth):
             if page_to_crawl not in urls_crawled:
                 content_page = get_page(page_to_crawl)
                 add_page_to_index(index, page_to_crawl, content_page)
-                union_lists(urls_next_depth, get_all_urls(content_page))
+                outlinks = get_all_urls(content_page)
+                graph[page_to_crawl] = outlinks
+                union_lists(urls_next_depth, outlinks)
                 urls_crawled.append(page_to_crawl)
 
             if not urls_to_crawl:
@@ -86,7 +89,7 @@ def crawl_web(start_url, max_crawl_depth):
                 urls_next_depth = []
                 depth = depth + 1
 
-        return index
+        return index, graph
                 
 
     except Exception as e:
@@ -155,8 +158,10 @@ index = []
 #print (index)
 #print (get_page("https://hellobasti.github.io/"))
 
-index = crawl_web('http://www.udacity.com/cs101x/index.html', 10)
-print (index_lookup(index, 'good'))
+index, graph = crawl_web('https://www.udacity.com/cs101x/urank/index.html', 10)
+print (index_lookup(index, 'Hummus'))
+print ('---------------------------')
+print (graph)
 
 
 
