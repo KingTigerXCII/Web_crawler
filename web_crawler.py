@@ -13,7 +13,8 @@ def get_page(url):
         return ""
 
 def get_next_url(page):
-    """This function returns a url and the end point of the url in the html structure"""
+    """This function returns a url and the end point of the url in the"""
+    """html structure"""
 
     try:
         start_html_tag = page.find(HTML_TAG_URL)
@@ -63,7 +64,8 @@ def get_all_urls(page):
         print ( "Error in get_all_urls: %s" % str(e) )
 
 def crawl_web(start_url, max_crawl_depth):
-    """This function gets a url as parameter and searches for urls in a given depth"""
+    """This function gets a url as parameter and searches for urls in a"""
+    """given depth"""
 
     try:
         urls_to_crawl = [start_url]
@@ -108,7 +110,8 @@ def add_to_index(index, keyword, url):
         print ( "Error in add_to_index: %s" % str(e) )
 
 def index_lookup(index, keyword):
-    """This function looks for the keyword in the index and return the entry or a empty list"""
+    """This function looks for the keyword in the index and return the"""
+    """entry or a empty list"""
 
     try:
         if keyword in index:
@@ -129,6 +132,33 @@ def add_page_to_index(index, url, content):
     except Exception as e:
         print ( "Error in add_page_to_index: %s" % str(e) )
 
+def compute_ranks(graph):
+    """Rank the pages by incoming links of popular pages. If the side which """
+    """invoke the page is high popular, it will get a good rank"""
+    try:
+        d = 0.8 # damping factor
+        numloops = 10
+        ranks = {}
+        npages = len(graph)
+        
+        for page in graph:
+            ranks[page] = 1.0 / npages
+            
+        for i in range(0, numloops):
+            newranks = {}
+            for page in graph:
+                newrank = (1 - d) / npages
+                for node in graph:
+                    if page in graph[node]:
+                        newrank = newrank + d *(ranks[node] / len(graph[node]))
+                newranks[page] = newrank			    
+            ranks = newranks
+                                                
+        return ranks
+                                                
+    except Exception as e:
+        print ( "Error in compute_ranks: %s" % str(e) )
+                                                
 #def record_user_click(index, keyword, url):
 #    """This function increases the count of website clicks for a specific keyword"""
 #
@@ -142,26 +172,15 @@ def add_page_to_index(index, url, content):
 #    except Exception as e:
 #        print ( "Error in record_user_click: %s" % str(e) )
 
-# Select a url for a website
-# Request
-# Handle the response --> result page
-
 index = []
-
-#print (crawl_web("http://www.udacity.com/cs101x/index.html",0))
-#print (crawl_web("http://www.udacity.com/cs101x/index.html",1))
-#print (crawl_web("http://www.udacity.com/cs101x/index.html",50))
-#print (crawl_web("http://www.udacity.com/cs101x/index.html",2))
-#add_page_to_index(index, 'fake.test', "This is a test")
-#print (index)
-#add_page_to_index(index, 'not.test', "This is not a test")
-#print (index)
-#print (get_page("https://hellobasti.github.io/"))
 
 index, graph = crawl_web('https://www.udacity.com/cs101x/urank/index.html', 10)
 print (index_lookup(index, 'Hummus'))
 print ('---------------------------')
 print (graph)
+ranks = compute_ranks(graph)
+print (ranks)
+
 
 
 
